@@ -23,11 +23,10 @@ async function validateJWTtoken ( token ){
 }
 
 async function verifyJWT_MW(req, res, next){
-    let token =  req.body.jwt;
+    let token =  req.header.authorization;
     if( token !== undefined && token !== ''){
-        let data = await validateJWTtoken(token);
-        console.log(data);
-        console.log('adding user_id');
+        let data = await validateJWTtoken(token.split(' ')[1]);
+
         if( data ){
             req.user_id = data.id;
             next();
@@ -141,9 +140,8 @@ router.delete('/', async (req, res) => {
 });
 
 // get all list
-// note to get all list using post method because to get jwt token in payload
-// to make generic
-router.post('/all', async (req, res) => {
+
+router.get('/', async (req, res) => {
     try {
 
         const result = await Item.find({});
