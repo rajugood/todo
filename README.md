@@ -18,3 +18,6 @@
 * UT with JEST, with 84% of code coverage
 * default one user seeding.
 
+![Jest](/images/jest-execution-report.jpg)
+
+![Coverage](/images/code-coverage.JPG)
