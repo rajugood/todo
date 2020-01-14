@@ -14,18 +14,26 @@ const publicKEY = fs.readFileSync(path.join(__dirname, config.publickey), 'utf8'
 
 
 async function validateJWTtoken ( token ){
-    let data = await jwt.verify( token, publicKEY, config.signOptions );
-    if(data){
-        return data;
-    }else{
+    try {
+        let data = await jwt.verify( token, publicKEY, config.signOptions );
+        if(data){
+            return data;
+        }else{
+            return false;
+        }
+    } catch (error) {
+        console.log(error);
         return false;
     }
+
 }
 
 async function verifyJWT_MW(req, res, next){
-    let token =  req.header.authorization;
+    let token =  req.headers.authorization;
+    
     if( token !== undefined && token !== ''){
-        let data = await validateJWTtoken(token.split(' ')[1]);
+        
+        let data = await validateJWTtoken(token);
 
         if( data ){
             req.user_id = data.id;

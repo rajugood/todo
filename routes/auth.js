@@ -25,12 +25,17 @@ function generateJWTtoken (user){
     return token;
 }
 
+router.post('/test', (req, res) => {
+    res.status(200).json({msg:"testing api"});
+});
+
 
 router.post('/create', async (req, res) => {
+
     let user = new User({
-        name: "Admin",
-        email: "admin@itpeoplecorp.com",
-        password: "admin"
+        name: req.body.name || "Admin",
+        email: req.body.email || "admin@itpeoplecorp.com",
+        password: req.body.password || "admin"
     });
     user.password = user.generateHash(user.password);
     let result = await user.save();
@@ -40,7 +45,7 @@ router.post('/create', async (req, res) => {
 router.post('/login', async (req, res) => {
 
     User.findOne({email: req.body.email}, function(err, user) {
-        console.log(req.body);
+        
         if (user.validPassword(req.body.password)) {
 
             let token = generateJWTtoken(user)
